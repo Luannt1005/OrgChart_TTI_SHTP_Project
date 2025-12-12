@@ -57,7 +57,7 @@ export default function OrgChartView() {
                 enableSearch: true,
                 enableAI: false,
                 layout: OrgChart.normal,
-                template: "ana",
+                template: "big",
                 enableDragDrop: true,
 
                 nodeBinding: {
@@ -204,48 +204,45 @@ export default function OrgChartView() {
             });
 
             chart.on("remove", (sender, args) => {
-    if (!args) {
-        console.error("Remove event: args is undefined or null.", args);
-        return;
-    }
+                        if (!args) {
+                            console.error("Remove event: args is undefined or null.", args);
+                            return;
+                        }
 
-    console.log("Remove event args:", args);
+                        console.log("Remove event args:", args);
 
-    const nodeId = args.id || args.node?.id || args;
+                        const nodeId = args.id || args.node?.id || args;
 
-    if (!nodeId) {
-        console.error("Remove event: node ID is undefined or invalid.", args);
-        return;
-    }
+                        if (!nodeId) {
+                            console.error("Remove event: node ID is undefined or invalid.", args);
+                            return;
+                        }
 
-    console.log("Removing node with ID:", nodeId);
+                        console.log("Removing node with ID:", nodeId);
 
-    const removeNodeDB = async () => {
-        try {
-            const res = await axios.post("/api/Remove-Node", { id: nodeId });
+                        const removeNodeDB = async () => {
+                            try {
+                                const res = await axios.post("/api/Remove-Node", { id: nodeId });
 
-            if (res.status === 200) {
-                console.log("Node successfully removed from database:", res.data);
-            } else {
-                console.error("Unexpected response:", res.status, res.statusText);
-            }
-        } catch (err) {
-            console.error("Failed to remove node from database:", err);
-        }
-    };
+                                if (res.status === 200) {
+                                    console.log("Node successfully removed from database:", res.data);
+                                } else {
+                                    console.error("Unexpected response:", res.status, res.statusText);
+                                }
+                            } catch (err) {
+                                console.error("Failed to remove node from database:", err);
+                            }
+                        };
 
-    // ⏳ Delay để chart update UI xong
-    setTimeout(() => {
-        removeNodeDB();
-    }, 300); // bạn có thể tăng lên 500 nếu cần
-});
-
-
+                        // ⏳ Delay để chart update UI xong
+                        setTimeout(() => {
+                            removeNodeDB();
+                        }, 300); // bạn có thể tăng lên 500 nếu cần
+                    });
 
 
 
 
-            
 
             chartRef.current = chart; // <── lưu lại chart
 

@@ -26,7 +26,11 @@ export function patchOrgChartTemplates() {
         OrgChart.templates.big.field_1 =
         `<text data-width="180" data-text-overflow="multiline" style="font-size: 16px;" fill="#000" x="35" y="245" text-anchor="start">{val}</text>`;
       OrgChart.templates.big.up = '';
-      OrgChart.templates.big.nodeMenuButton = "";
+
+      // OrgChart.templates.big.nodeMenuButton = 
+
+
+
    
 
       OrgChart.templates.group.link =

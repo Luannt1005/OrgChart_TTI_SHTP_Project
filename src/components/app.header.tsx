@@ -34,10 +34,10 @@ function AppHeader() {
   return (
     <>
       {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-red-700 shadow-lg">
-        <div className="container mx-auto px-4">
+      <header className="fixed left-0 right-0 top-0 z-50 bg-red-700 shadow-lg h-12 flex items-center px-12">
+        <div className="w-full">
           {/* NAVBAR - Single Row */}
-          <nav className="flex items-center justify-between py-3">
+          <nav className="flex items-center justify-between py-3 px-20">
             {/* LEFT: LOGO */}
             <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition">
               <Image
@@ -47,11 +47,6 @@ function AppHeader() {
                 alt="Milwaukee logo"
               />
             </Link>
-
-            {/* CENTER: Brand Title */}
-            <div className="text-white font-bold text-lg">
-              SHTP OrgChart
-            </div>
 
             {/* RIGHT: NAVIGATION ITEMS */}
             <div className="flex items-center gap-2">

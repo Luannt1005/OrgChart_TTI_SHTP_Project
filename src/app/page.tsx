@@ -1,32 +1,25 @@
 'use client'
 import Image from "next/image";
-import styles from "./page.module.css";
 import Link from "next/link";
-import x from "@/styles/app.module.css"
-import y from "@/styles/luan.module.css"
-import 'bootstrap/dist/css/bootstrap.min.css';
 import AppTable from "@/components/app.table";
-import { useEffect } from "react";
 import useSWR from "swr";
-
 
 export default function Home() {
 
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
   const { data, error, isLoading } = useSWR(
     "http://127.0.0.1:5000/data",
-    fetcher,{
-  revalidateIfStale: false,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false
-}
-    
+    fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
-  console.log('>>> fetch', data)
 
   return (
-  <div>
-    
-  </div>
+    <div className="min-h-screen bg-white">
+      
+    </div>
   );
 }

@@ -28,8 +28,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} bg-gray-50`}>
         <AppHeader />
-        <main className="min-h-screen flex flex-col pt-16!">
-          <div className="flex-1 container mx-auto px-4 py-6">
+        <main className="min-h-screen flex flex-col w-full">
+          <div className="flex-1">
             {children}
           </div>
         </main>

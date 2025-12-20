@@ -1,23 +1,15 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-
-/**
- * Type đúng theo API của bạn
- */
-type ApiItem = {
-  name: string;
-  tags?: string[];
-};
+import { useOrgData } from "@/hooks/useOrgData";
 
 function AppHeader() {
   const pathname = usePathname();
+  const { groups, loading } = useOrgData();
 
-  const [groups, setGroups] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -33,37 +25,6 @@ function AppHeader() {
   };
 
   /**
-   * Load danh sách group
-   */
-  useEffect(() => {
-    const fetchGroups = async () => {
-      try {
-        const res = await fetch("/api/get_data", { cache: "no-store" });
-        const result = await res.json();
-
-        const list: ApiItem[] = result.data ?? [];
-
-        const names: string[] = Array.from(
-          new Set(
-            list
-              .filter(item => item.tags?.includes("group"))
-              .map(item => item.name)
-              .filter(Boolean)
-          )
-        ).sort();
-
-        setGroups(names);
-      } catch (error) {
-        console.error("Failed to load group names", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGroups();
-  }, []);
-
-  /**
    * Filter theo search
    */
   const filteredGroups = groups.filter(name =>
@@ -73,7 +34,7 @@ function AppHeader() {
   return (
     <>
       {/* HEADER */}
-      <header className="fixed left-0 right-0 top-0 z-50 bg-red-700 shadow-lg h-16 flex items-center">
+      <header className="sticky top-0 z-50 bg-red-700 shadow-lg">
         <div className="container mx-auto px-4">
           {/* NAVBAR - Single Row */}
           <nav className="flex items-center justify-between py-3">
@@ -86,6 +47,11 @@ function AppHeader() {
                 alt="Milwaukee logo"
               />
             </Link>
+
+            {/* CENTER: Brand Title */}
+            <div className="text-white font-bold text-lg">
+              SHTP OrgChart
+            </div>
 
             {/* RIGHT: NAVIGATION ITEMS */}
             <div className="flex items-center gap-2">

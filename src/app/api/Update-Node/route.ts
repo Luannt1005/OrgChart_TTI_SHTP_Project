@@ -1,34 +1,62 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import axios from "axios";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const data = await req.json();
 
-    // 🔹 Validate cơ bản
+    // Validate required field
     if (!data.id) {
+      console.warn("Missing required field in Update-Node: id");
       return NextResponse.json(
-        { status: "error", message: "Missing id field" },
+        {
+          success: false,
+          error: "Missing required field: id is required",
+        },
         { status: 400 }
       );
     }
 
-    // 🔹 Gọi Google Apps Script WebApp của bạn
-    const resp = await fetch(
-      "https://script.google.com/macros/s/AKfycbypcbXZrBEehjlpMZuYKTALdKpz3squYGldxo8W9wpcdo2K_GGXX-TLHj-_bmevMjlEWA/exec",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      }
-    );
+    // Get GAS URL from environment
+    const gasUrl = process.env.NEXT_PUBLIC_GAS_UPDATE_NODE_URL;
+    if (!gasUrl) {
+      console.error("GAS_UPDATE_NODE_URL is not configured");
+      throw new Error("Update-Node GAS URL is not configured");
+    }
 
-    const result = await resp.json();
+    console.log("Updating node via GAS:", { id: data.id });
 
-    return NextResponse.json(result);
+    // Send to Google Apps Script
+    const res = await axios.post(gasUrl, data, {
+      timeout: 15000,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  } catch (err: any) {
+    const result = res.data || {};
+
+    console.log("Update-Node response:", result);
+
     return NextResponse.json(
-      { status: "error", message: err.toString() },
+      {
+        success: true,
+        data: result,
+        timestamp: new Date().toISOString(),
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("POST /api/Update-Node failed:", error);
+
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to update node";
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: errorMessage,
+      },
       { status: 500 }
     );
   }

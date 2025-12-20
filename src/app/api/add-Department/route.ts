@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
+import { NEXT_PUBLIC_GAS_ADD_DEPT_URL } from "@/constant/api";
 
 export async function POST(req: Request) {
   try {
@@ -18,7 +19,7 @@ export async function POST(req: Request) {
     }
 
     // Get GAS URL from environment
-    const gasUrl = process.env.NEXT_PUBLIC_GAS_ADD_DEPT_URL;
+    const gasUrl = NEXT_PUBLIC_GAS_ADD_DEPT_URL;
     if (!gasUrl) {
       console.error("GAS_ADD_DEPT_URL is not configured");
       throw new Error("Add-Department GAS URL is not configured");

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
+import { NEXT_PUBLIC_GAS_DATA_URL } from "@/constant/api";
 
 export async function GET(req: Request) {
   try {
@@ -7,7 +8,8 @@ export async function GET(req: Request) {
     const dept = searchParams.get("dept");
 
     // Use the GAS URL from env
-    const gasUrl = process.env.NEXT_PUBLIC_GAS_DATA_URL;
+    const gasUrl = NEXT_PUBLIC_GAS_DATA_URL;
+    console.log("GAS_URL:", gasUrl);
     
     if (!gasUrl) {
       console.error("GAS_DATA_URL is not configured in environment");

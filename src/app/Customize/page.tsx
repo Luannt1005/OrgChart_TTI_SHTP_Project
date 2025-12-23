@@ -11,6 +11,7 @@ const ORG_ID = "org_admin_1";
 const Customize = () => {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<any>(null);
+  const originalNodesRef = useRef<any[]>([]); // Store original nodes
   
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaveTime, setLastSaveTime] = useState<string | null>(null);
@@ -24,33 +25,44 @@ const Customize = () => {
 
     try {
       const chart = chartInstance.current;
-      const allNodes: any[] = [];
-
-      // Get all nodes from the chart's internal nodes collection
-      for (const nodeId in chart.nodes) {
-        if (chart.nodes.hasOwnProperty(nodeId)) {
-          const node = chart.get(nodeId);
-          if (node) {
-            allNodes.push({
-              ...node,
-              tags: Array.isArray(node.tags) ? node.tags : (node.tags ? [node.tags] : []),
-            });
-          }
+      
+      // Update original nodes with current state from chart
+      const allNodes = originalNodesRef.current.map((originalNode: any) => {
+        const currentNode = chart.get(originalNode.id);
+        
+        if (currentNode) {
+          // Merge original node with current state
+          return {
+            ...originalNode,
+            pid: currentNode.pid || originalNode.pid || '',
+            ppid: currentNode.ppid || originalNode.ppid || '',
+            stpid: currentNode.stpid || originalNode.stpid || '',
+            name: currentNode.name || originalNode.name || '',
+            title: currentNode.title || originalNode.title || '',
+            photo: currentNode.photo || originalNode.photo || '',
+            img: currentNode.img || originalNode.img || '',
+            tags: Array.isArray(currentNode.tags) ? currentNode.tags : (currentNode.tags ? [currentNode.tags] : []),
+            // Preserve any other properties from original
+            ...Object.keys(originalNode).reduce((acc: any, key: string) => {
+              if (!['id', 'pid', 'ppid', 'stpid', 'name', 'title', 'photo', 'img', 'tags'].includes(key)) {
+                acc[key] = originalNode[key];
+              }
+              return acc;
+            }, {})
+          };
         }
-      }
+        return originalNode;
+      });
 
-      // Format as org_data with data array (same format as loaded)
-      const orgData = { data: allNodes };
-
-      console.log("Saving nodes:", allNodes);
-      console.log("Full org_data:", orgData);
+      console.log("Saving all nodes:", allNodes);
+      console.log("Total nodes:", allNodes.length);
 
       const response = await fetch("/api/save_data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           org_id: ORG_ID,
-          org_data: orgData
+          org_data: { data: allNodes }
         })
       });
 
@@ -83,6 +95,9 @@ const Customize = () => {
 
         const orgJson = JSON.parse(res.org_data);
         console.log("Loaded org data:", orgJson);
+
+        // Store original nodes
+        originalNodesRef.current = orgJson.data;
 
         const chartNodes = orgJson.data.map((n: any) => ({
           ...n,

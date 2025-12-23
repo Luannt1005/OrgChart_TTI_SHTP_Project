@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// ⚠️ THay đổi URL này thành POST endpoint của Apps Script của bạn
-// Nó PHẢI khác với LOAD_URL
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_POST_DEPLOYMENT_ID/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9bCXq8G7UIz0fbZo2H7LdRg0gh-v-Ime4sibbjkXZuQJ-XTcRdeaG3oBuDZfLn2il/exec";
 
 export async function POST(req: NextRequest) {
   try {

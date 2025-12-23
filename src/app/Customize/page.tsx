@@ -6,7 +6,7 @@ import OrgChart from "@balkangraph/orgchart.js";
 const LOAD_URL =
   "https://script.google.com/macros/s/AKfycbzbWJUtJ77FWSWkyR_A6RaEvvK9WKFlnNIRTDsXLggcxihknZcF4JhAGgIybKMmE807/exec";
 
-const ORG_ID = "org_admin_1";
+const ORG_ID = "org_admin_2";
 
 const Customize = () => {
   const chartRef = useRef<HTMLDivElement>(null);

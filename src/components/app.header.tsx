@@ -24,6 +24,10 @@ function AppHeader() {
     // Get user info from localStorage or session
     const storedUser = localStorage.getItem("user");
 
+    // Public pages that don't require user data
+    const publicPages = ["/login", "/signup"];
+    const isPublicPage = publicPages.includes(pathname);
+
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -34,14 +38,14 @@ function AppHeader() {
       } catch (e) {
         console.error("Failed to parse user data", e);
         localStorage.removeItem("user");
-        // Redirect to login if stored data is invalid
-        if (pathname !== "/login") {
+        // Redirect to login if stored data is invalid (but not from public pages)
+        if (!isPublicPage) {
           router.push("/login");
         }
       }
     } else {
-      // No user data found, redirect to login
-      if (pathname !== "/login") {
+      // No user data found, redirect to login (but not from public pages)
+      if (!isPublicPage) {
         router.push("/login");
       }
     }

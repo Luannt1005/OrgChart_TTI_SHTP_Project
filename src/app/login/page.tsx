@@ -30,9 +30,8 @@ export default function LoginPage() {
       if (data.success) {
         // ✅ Show success animation
         setSuccess(true);
-        
-        // Set cookie for middleware
-        document.cookie = "auth=true; path=/; max-age=86400";
+
+        // Local Storage for UI state only
         localStorage.setItem("user", JSON.stringify(data.user));
 
         // Redirect after animation

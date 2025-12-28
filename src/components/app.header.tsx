@@ -23,7 +23,7 @@ function AppHeader() {
   useEffect(() => {
     // Get user info from localStorage or session
     const storedUser = localStorage.getItem("user");
-    
+
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -45,7 +45,7 @@ function AppHeader() {
         router.push("/login");
       }
     }
-    
+
     setIsLoading(false);
   }, [pathname, router]);
 
@@ -66,13 +66,22 @@ function AppHeader() {
     };
   }, [isUserMenuOpen]);
 
-  /**
+  /*
    * Đăng xuất
    */
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/logout", { method: "POST" });
+    } catch (e) {
+      console.error(e);
+    }
+
+    // Clear user data from local storage
     localStorage.removeItem("user");
+
     setUser(null);
     setIsUserMenuOpen(false);
+
     window.location.href = "/login";
   };
 
@@ -112,7 +121,7 @@ function AppHeader() {
             >
               Dashboard HR
             </Link>
-             <Link
+            <Link
               href="/SheetManager"
               className={`mwk-nav-link ${pathname === "/SheetManager" ? "active" : ""}`}
             >
@@ -173,8 +182,8 @@ function AppHeader() {
                       <Link
                         key={name}
                         href={name
-                      ? `/Orgchart?group=${encodeURIComponent(name)}`
-                      : "/Orgchart"}
+                          ? `/Orgchart?group=${encodeURIComponent(name)}`
+                          : "/Orgchart"}
                         className="mwk-dropdown-item"
                       >
                         {name}
@@ -185,11 +194,11 @@ function AppHeader() {
                 {/* Footer */}
                 <div className="mwk-dropdown-footer">
                   <Link
-                        href={"/Orgchart"}
-                        className="mwk-dropdown-item"
-                      >
-                        Xem tất cả phòng ban
-                      </Link>
+                    href={"/Orgchart"}
+                    className="mwk-dropdown-item"
+                  >
+                    Xem tất cả phòng ban
+                  </Link>
                 </div>
               </div>
             </div>

@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { encrypt } from "@/lib/auth";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -13,6 +15,19 @@ export async function POST(req: Request) {
   );
 
   const data = await res.json();
+
+  if (data.success) {
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const session = await encrypt({ user: data.user, expires });
+
+    (await cookies()).set("auth", session, {
+      expires,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      sameSite: "lax",
+    });
+  }
 
   return NextResponse.json(data);
 }

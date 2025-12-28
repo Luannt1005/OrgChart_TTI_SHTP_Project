@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-gray-50`}>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AppHeader />
         <main className="min-h-screen flex flex-col w-full" style={{ paddingTop: '75px' }}>
           <div className="flex-1">
